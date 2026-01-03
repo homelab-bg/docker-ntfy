@@ -1,0 +1,38 @@
+---
+
+x-logging:
+  &default-logging
+  driver: "json-file"
+  options:
+    max-size: "1m"
+    max-file: "1"
+    tag: "{{.Name}}"
+
+x-common-labels: &default-labels
+  logging: "promtail"
+  logging_jobname: "containerlogs"
+  stackname: ${MONITORING_STACK}
+
+services:
+  ntfy:
+    ports: !reset []
+    expose:
+      - 80
+    networks:
+      - traefik
+    labels:
+      <<: *default-labels
+      # Enable Traefik for this service
+      traefik.enable: true
+      # Configure router
+      traefik.http.routers.ntfy.rule: Host(`${TRAEFIK_HOST}`)
+      traefik.http.routers.ntfy.tls: true
+      traefik.http.routers.ntfy.tls.certresolver: letsencrypt
+      # Configure service
+      traefik.http.services.ntfy.loadbalancer.server.port: ${TRAEFIK_PORT}
+    logging: *default-logging
+
+networks:
+  traefik:
+    name: ${NETWORK}
+    external: true
