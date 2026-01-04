@@ -17,9 +17,11 @@ services:
   ntfy:
     ports: !reset []
     expose:
-      - 80
+      - ${TRAEFIK_PORT}
     networks:
       - traefik
+    environment:
+      - NTFY_BEHIND_PROXY=true
     labels:
       <<: *default-labels
       # Enable Traefik for this service
