@@ -17,7 +17,7 @@ services:
   ntfy:
     ports: !reset []
     expose:
-      - ${TRAEFIK_PORT}
+      - ${NTFY_PORT}
     networks:
       - traefik
     environment:
@@ -31,7 +31,7 @@ services:
       traefik.http.routers.ntfy.tls: true
       traefik.http.routers.ntfy.tls.certresolver: letsencrypt
       # Configure service
-      traefik.http.services.ntfy.loadbalancer.server.port: ${TRAEFIK_PORT}
+      traefik.http.services.ntfy.loadbalancer.server.port: ${NTFY_PORT}
     logging: *default-logging
 
 networks:
